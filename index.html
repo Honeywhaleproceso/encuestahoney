@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta y Administración</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        .container {
+            margin: 20px auto;
+            max-width: 500px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"], input[type="password"], select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #optional_reason {
+            display: none;
+        }
+        .title {
+            color: yellow;
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        #mainPage {
+            background-image: url('https://honey-whale.com/wp-content/uploads/2020/05/honey-whale-site-background.jpg'); /* URL de la imagen de fondo */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 50px 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainPage" class="container">
+        <div class="title">HONEY WHALE</div>
+        <button onclick="showAdminPage()">Acceso Administradores</button>
+        <button onclick="showVendorLogin()">Acceso Vendedores</button>
+    </div>
+
+    <div id="adminPage" class="container" style="display: none;">
+        <h1>Acceso Administrador</h1>
+        <form id="adminLoginForm">
+            <label for="admin_username">Nombre de Usuario:</label>
+            <input type="text" id="admin_username" name="username" required><br>
+            <label for="admin_password">Contraseña:</label>
+            <input type="password" id="admin_password" name="password" required><br>
+            <input type="submit" value="Iniciar sesión">
+        </form>
+        <p id="adminLoginMessage"></p>
+        <button onclick="showMainPage()">Regresar</button>
+        <button onclick="showAdminRegister()">Crear cuenta de Administrador</button>
+    </div>
+
+    <div id="adminRegisterPage" class="container" style="display: none;">
+        <h1>Crear Cuenta de Administrador</h1>
+        <form id="adminRegisterForm">
+            <label for="reg_admin_username">Nombre de Usuario:</label>
+            <input type="text" id="reg_admin_username" name="username" required><br>
+            <label for="reg_admin_password">Contraseña:</label>
+            <input type="password" id="reg_admin_password" name="password" required><br>
+            <input type="submit" value="Crear Cuenta">
+        </form>
+        <p id="adminRegisterMessage"></p>
+        <button onclick="showAdminPage()">Regresar</button>
+    </div>
+
+    <div id="vendorLoginPage" class="container" style="display: none;">
+        <h1>Acceso Vendedor</h1>
+        <form id="vendorLoginForm">
+            <label for="vendor_username">Nombre de Usuario:</label>
+            <input type="text" id="vendor_username" name="username" required><br>
+            <label for="vendor_password">Contraseña:</label>
+            <input type="password" id="vendor_password" name="password" required><br>
+            <input type="submit" value="Iniciar sesión">
+        </form>
+        <p id="vendorLoginMessage"></p>
+        <button onclick="showVendorRegister()">Crear cuenta</button>
+        <button onclick="showMainPage()">Regresar</button>
+    </div>
+
+    <div id="vendorRegisterPage" class="container" style="display: none;">
+        <h1>Crear Cuenta de Vendedor</h1>
+        <form id="vendorRegisterForm">
+            <label for="reg_vendor_username">Nombre de Usuario:</label>
+            <input type="text" id="reg_vendor_username" name="username" required><br>
+            <label for="reg_vendor_password">Contraseña:</label>
+            <input type="password" id="reg_vendor_password" name="password" required><br>
+            <input type="submit" value="Crear Cuenta">
+        </form>
+        <p>¿Ya tienes cuenta? <a href="#" onclick="showVendorLogin()">Inicia sesión aquí</a></p>
+        <button onclick="showMainPage()">Regresar</button>
+    </div>
+
+    <div id="surveyPage" class="container" style="display: none;">
+        <h1>Encuesta</h1>
+        <form id="surveyForm">
+            <label for="customer_name">Nombre del Cliente:</label>
+            <input type="text" id="customer_name" name="customer_name" required><br>
+            <label for="phone_number">Número de Teléfono:</label>
+            <input type="text" id="phone_number" name="phone_number" required><br>
+            <label for="address">Dirección:</label>
+            <input type="text" id="address" name="address" required><br>
+            <label for="warranty">¿Le interesaría una garantía en caso de recolección?</label>
+            <select id="warranty" name="warranty" required>
+                <option value="" disabled selected>Seleccione...</option>
+                <option value="yes">Sí</option>
+                <option value="no">No</option>
+            </select><br>
+            <div id="optional_reason">
+                <label for="optional_reason_input">¿Por qué?</label>
+                <input type="text" id="optional_reason_input" name="optional_reason"><br>
+            </div>
+            <input type="submit" value="Enviar Encuesta">
+        </form>
+        <button onclick="logout()">Cerrar sesión</button>
+    </div>
+
+    <div id="adminResultsPage" class="container" style="display: none;">
+        <h1>Resultados de Encuestas</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Vendedor</th>
+                    <th>Nombre del Cliente</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Garantía</th>
+                    <th>Razón Opcional</th>
+                </tr>
+            </thead>
+            <tbody id="adminTableBody">
+                <!-- Los datos se agregarán aquí -->
+            </tbody>
+        </table>
+        <button onclick="showMainPage()">Regresar</button>
+    </div>
+
+    <script>
+        let loggedInUser = null;
+        let userType = null;
+        const adminUsers = {
+            'Erick': '123',
+            'Marco': '1234',
+            'JM': '12345'
+        };
+        const userPasswords = {}; // Para almacenar contraseñas de los vendedores
+        const surveys = []; // Para almacenar encuestas en el lado del cliente (solo para demostración)
+        const MAX_ADMINS = 3; // Máximo número de administradores
+
+        function showMainPage() {
+            document.getElementById('mainPage').style.display = 'block';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('adminRegisterPage').style.display = 'none';
+            document.getElementById('vendorLoginPage').style.display = 'none';
+            document.getElementById('vendorRegisterPage').style.display = 'none';
+            document.getElementById('surveyPage').style.display = 'none';
+            document.getElementById('adminResultsPage').style.display = 'none';
+        }
+
+        function showAdminPage() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'block';
+            document.getElementById('adminRegisterPage').style.display = 'none';
+        }
+
+        function showAdminRegister() {
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('adminRegisterPage').style.display = 'block';
+        }
+
+        function showVendorLogin() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('vendorLoginPage').style.display = 'block';
+            document.getElementById('vendorRegisterPage').style.display = 'none';
+        }
+
+        function showVendorRegister() {
+            document.getElementById('vendorLoginPage').style.display = 'none';
+            document.getElementById('vendorRegisterPage').style.display = 'block';
+        }
+
+        function showSurveyPage() {
+            document.getElementById('vendorLoginPage').style.display = 'none';
+            document.getElementById('vendorRegisterPage').style.display = 'none';
+            document.getElementById('surveyPage').style.display = 'block';
+            document.getElementById('adminResultsPage').style.display = 'none';
+        }
+
+        function showAdminResultsPage() {
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('adminResultsPage').style.display = 'block';
+            populateAdminTable();
+        }
+
+        function logout() {
+            loggedInUser = null;
+            userType = null;
+            showMainPage();
+        }
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('admin_username').value;
+            const password = document.getElementById('admin_password').value;
+
+            if (adminUsers[username] === password) {
+                loggedInUser = username;
+                showAdminResultsPage();
+            } else {
+                document.getElementById('adminLoginMessage').textContent = 'Credenciales de administrador inválidas';
+            }
+        });
+
+        document.getElementById('adminRegisterForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('reg_admin_username').value;
+            const password = document.getElementById('reg_admin_password').value;
+
+            if (Object.keys(adminUsers).length < MAX_ADMINS) {
+                if (!(username in adminUsers)) {
+                    adminUsers[username] = password;
+                    alert('Administrador creado con éxito.');
+                    showAdminPage();
+                } else {
+                    alert('El usuario ya existe.');
+                }
+            } else {
+                alert('No se pueden crear más administradores.');
+            }
+        });
+
+        document.getElementById('vendorLoginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('vendor_username').value;
+            const password = document.getElementById('vendor_password').value;
+
+            if (username in userPasswords && userPasswords[username] === password) {
+                loggedInUser = username;
+                showSurveyPage();
+            } else {
+                document.getElementById('vendorLoginMessage').textContent = 'Credenciales de vendedor inválidas';
+            }
+        });
+
+        document.getElementById('vendorRegisterForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('reg_vendor_username').value;
+            const password = document.getElementById('reg_vendor_password').value;
+
+            if (!(username in userPasswords)) {
+                userPasswords[username] = password;
+                alert('Registro exitoso. Ahora puedes iniciar sesión.');
+                showVendorLogin();
+            } else {
+                alert('El usuario ya existe.');
+            }
+        });
+
+        document.getElementById('surveyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const warranty = document.getElementById('warranty').value;
+            const optionalReason = document.getElementById('optional_reason_input').value;
+
+            if (loggedInUser) {
+                surveys.push({
+                    vendor: loggedInUser,
+                    customer_name: document.getElementById('customer_name').value,
+                    phone_number: document.getElementById('phone_number').value,
+                    address: document.getElementById('address').value,
+                    warranty: warranty,
+                    optional_reason: warranty === 'no' ? optionalReason : ''
+                });
+
+                alert('Encuesta enviada con éxito');
+                document.getElementById('surveyForm').reset();
+                document.getElementById('optional_reason').style.display = 'none';
+            }
+        });
+
+        document.getElementById('warranty').addEventListener('change', function() {
+            document.getElementById('optional_reason').style.display = this.value === 'no' ? 'block' : 'none';
+        });
+
+        function populateAdminTable() {
+            const tableBody = document.getElementById('adminTableBody');
+            tableBody.innerHTML = '';
+
+            surveys.forEach(survey => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${survey.vendor}</td>
+                    <td>${survey.customer_name}</td>
+                    <td>${survey.phone_number}</td>
+                    <td>${survey.address}</td>
+                    <td>${survey.warranty}</td>
+                    <td>${survey.optional_reason}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>
